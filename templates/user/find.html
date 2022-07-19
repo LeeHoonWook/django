@@ -1,0 +1,68 @@
+{% extends "user/layout.html" %}
+
+{% load static %}
+
+{% block content %}
+<!-- Content -->
+
+<div class="container-xxl">
+    <div class="authentication-wrapper authentication-basic container-p-y">
+        <div class="authentication-inner">
+            <!-- Register -->
+            <div class="card">
+                <div class="card-body">
+                    <!-- Logo -->
+                    <div class="app-brand justify-content-center">
+                        <a href="{% url 'index'%}" class="app-brand-link gap-2">
+                            <span class="app-brand-logo demo">
+                                <img src="{% static 'assets/talk.jpg' %}" alt="" width="50px" height="60px">
+                            </span>
+                            <span class="app-brand-text demo text-body fw-bolder">StudyLab</span>
+                        </a>
+                    </div>
+                    <!-- /Logo -->
+                    <h4 class="mb-2">Forgot Password? 🔒</h4>
+                    {% if msg %}
+                        <p style="margin-top:20px;color:red;" class="mb-4">{{ msg }}</p>
+                    {% else %}
+                        <p style="margin-top:20px;color:red;" class="mb-4">초기화 비밀번호는 1234입니다.</p>
+                    {% endif %}
+                
+                    <form id="formAuthentication" class="mb-3" method="POST">
+                        {% csrf_token %}
+                        <div class="mb-3">
+                            <label for="username" class="form-label">Username</label>
+                            {{ form.user_id }}
+                        </div>
+                        <div class="mb-3 form-password-toggle">
+                            <label for="hint" class="form-label">내 보물 1호는?</label>
+                            {{ form.hint }}
+                        </div>
+                        <div class="mb-3">
+                            <button class="btn btn-primary d-grid w-100" type="submit">비밀번호 초기화</button>
+                        </div>
+                    </form>
+                    <div class="text-center">
+                        <a href="{% url 'login' %}" class="d-flex align-items-center justify-content-center">
+                            <i class="fa-solid fa-angle-left"></i>
+                            로그인 하러가기
+                        </a>
+                    </div>
+
+                </div>
+            </div>
+            <!-- /Register -->
+        </div>
+    </div>
+</div>
+
+<!-- / Content -->
+
+<div class="buy-now">
+    <a href="{% url 'index'%}" class="btn btn-danger btn-buy-now">Dashboard</a>
+</div>
+{% endblock %}
+
+{% block script %}
+<script></script>
+{% endblock %}
