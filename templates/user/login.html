@@ -1,0 +1,110 @@
+{% extends "user/layout.html" %}
+
+{% load static %}
+
+{% block content %}
+<!-- Content -->
+
+<div class="container-xxl">
+    <div class="authentication-wrapper authentication-basic container-p-y">
+        <div class="authentication-inner">
+            <!-- Register -->
+            <div class="card">
+                <div class="card-body">
+                    <!-- Logo -->
+                    <div class="app-brand justify-content-center">
+                        <a href="{% url 'index'%}" class="app-brand-link gap-2">
+                            <span class="app-brand-logo demo">
+                                <img src="{% static 'assets/talk.jpg' %}" alt="" width="50px" height="60px">
+                            </span>
+                            <span class="app-brand-text demo text-body fw-bolder">StudyLab</span>
+                        </a>
+                    </div>
+                    <!-- /Logo -->
+                    <h4 class="mb-2">Welcome to StudyLab! 👋</h4>
+                    {% if msg %}
+                        <p style="margin-top:20px;color:red;" class="mb-4">{{ msg }}</p>
+                    {% else %}
+                        {% if user.is_anonymous %}
+                            <p class="mb-4">로그인 후 이용해주세요</p>
+                        {% endif %}
+                        {% if user.is_authenticated %}
+                            <p class="mb-4">이미 로그인 중입니다.</p>
+                        {% endif %}
+                        
+                    {% endif %}
+
+                    {% if user.is_anonymous %}
+                        <form id="formAuthentication" class="mb-3" method="POST">
+                    {% endif %}
+                    {% if user.is_authenticated %}
+                        <form id="formAuthentication" class="mb-3" action="{% url 'logout' %}">
+                    {% endif %}
+                    
+                        {% csrf_token %}
+                        {% if user.is_anonymous %}
+                            <div class="mb-3">
+                                <label for="username" class="form-label">Username</label>
+                                {{ form.user_id }}
+                            </div>
+                            <div class="mb-3 form-password-toggle">
+                                <div class="d-flex justify-content-between">
+                                    <label class="form-label" for="password">Password</label>
+                                    <a href="{% url 'user_find' %}">
+                                        <small>기억이 안나시나요?</small>
+                                    </a>
+                                </div>
+                                <div class="input-group input-group-merge">
+                                    {{ form.password }}
+                                    <span class="input-group-text cursor-pointer"><i id="change-eye" class="fa-solid fa-eye"></i></span>
+                                </div>
+                            </div>
+                            <div class="mb-3">
+                                <button class="btn btn-primary d-grid w-100" type="submit">로그인 하기</button>
+                            </div>
+                        {% endif %}
+                        {% if user.is_authenticated %}
+                            <div class="mb-3">
+                                <button class="btn btn-primary d-grid w-100" type="submit">로그아웃 하실 건가요?</button>
+                            </div>
+                        {% endif %}
+                        
+                    </form>
+                    {% if user.is_anonymous %}
+                        <p class="text-center">
+                            <span>아이디가 없나요?</span>
+                            <a href="{% url 'register' %}">
+                                <span>회원가입 하기</span>
+                            </a>
+                        </p>
+                    {% endif %}
+
+                </div>
+            </div>
+            <!-- /Register -->
+        </div>
+    </div>
+</div>
+
+<!-- / Content -->
+
+<div class="buy-now">
+    <a href="{% url 'index'%}" class="btn btn-danger btn-buy-now">Dashboard</a>
+</div>
+{% endblock %}
+
+{% block script %}
+<script>
+    $(function(){
+        $('#change-eye').click(function(){
+            let cls = document.getElementById('change-eye').className
+            if (cls == 'fa-solid fa-eye'){
+                document.getElementById('change-eye').className = 'fa-solid fa-eye-slash'
+            }
+            else{
+                document.getElementById('change-eye').className = 'fa-solid fa-eye'
+            }
+        });
+    });
+</script>
+{% endblock %}
