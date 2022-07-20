@@ -4,7 +4,8 @@ from argon2 import PasswordHasher, exceptions  # pip install argon2-cffi
 from django.contrib.auth import login
 from django.shortcuts import redirect
 
-from app.errors import PasswordMatchError
+from app.errors import PasswordMatchError, PasswordLengthError
+import random
 
 
 class RegisterForm(forms.Form):
@@ -45,13 +46,15 @@ class RegisterForm(forms.Form):
         check_pw = data.get('check_password')
         hint = data.get('hint')
         check = data.get('check')
-
         if check == 'False':
             msg = '아이디 중복확인이 되지 않았습니다.'
+            status_code = 422
         else:
             try:
                 if pw != check_pw:
                     raise PasswordMatchError
+                elif len(pw) < 4:
+                    raise PasswordLengthError
                 else:
                     user = Users(
                         username=user_id,
@@ -61,11 +64,20 @@ class RegisterForm(forms.Form):
                     user.save()
                     login(request, user)
                     msg = '성공'
+                    status_code = 200
 
             except PasswordMatchError as e:
                 msg = e
+                status_code = 422
+            except PasswordLengthError as e:
+                msg = e
+                status_code = 422
+            except Exception as e:
+                # print(e)
+                msg = '예기치 않은 오류가 발생하였습니다.'
+                status_code = 500
 
-        return msg
+        return msg, status_code
 
 
 class LoginForm(forms.Form):
@@ -87,6 +99,7 @@ class LoginForm(forms.Form):
         user_id = data.get('user_id')
         pw = data.get('password')
         msg = "올바른 유저ID와 패스워드를 입력하세요."
+        status_code = 422
         try:
             user = Users.objects.get(username=user_id)
         except Users.DoesNotExist:
@@ -99,8 +112,9 @@ class LoginForm(forms.Form):
             else:
                 login(request, user)
                 msg = '성공'
+                status_code = 200
 
-        return msg
+        return msg, status_code
 
 
 class FindForm(forms.Form):
@@ -120,6 +134,7 @@ class FindForm(forms.Form):
         user_id = data.get('user_id')
         hint = data.get('hint')
         msg = "일치하지 않습니다."
+        random_number = random.randrange(1000, 10000)
         try:
             user = Users.objects.get(username=user_id)
         except Users.DoesNotExist:
@@ -128,8 +143,8 @@ class FindForm(forms.Form):
             if user.hint != hint:
                 pass
             else:
-                user.password = PasswordHasher().hash('1234')
+                user.password = PasswordHasher().hash(str(random_number))
                 user.save()
                 msg = '성공'
 
-        return msg
+        return msg, random_number
