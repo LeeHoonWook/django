@@ -25,9 +25,14 @@ class Memos(TimeStampedModel):
     title = models.CharField(max_length=100)
     content = models.CharField(max_length=1000)
     writer = models.ForeignKey(Users, on_delete=models.CASCADE)
-    img = models.FileField(upload_to="")
+    img = models.FileField(upload_to="", blank=True)
     like = models.BigIntegerField(default=0)
-    labels = models.ManyToManyField('Labels', related_name='memos')
+    labels = models.ManyToManyField('Labels', related_name='memos', blank=True)
+
+    def clicked(self):
+        self.like += 1
+        self.save()
+        return self
 
 
 class Chats(TimeStampedModel):

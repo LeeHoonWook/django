@@ -18,9 +18,29 @@ from django.urls import path
 from app.views import index
 from django.conf.urls import include
 
+# rest_framework
+from rest_framework import routers
+from app.memo.apis import *
+
+# 이미지
+from django.conf.urls.static import static
+from django.conf import settings
+
+router = routers.DefaultRouter()
+router.register(r'memos', MemoViewSet)
+router.register(r'labels', LabelViewSet)
+
 urlpatterns = [
     path('admin/', admin.site.urls),
     path("", index, name="index"),
 
     path("user/", include("app.user.urls")),
-]
+
+    # rest_framework
+    path("apis/", include(router.urls)),
+] + static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)
+# if settings.DEBUG:
+#     urlpatterns += static(
+#         settings.MEDIA_URL,
+#         document_root=settings.MEDIA_ROOT
+#     )
