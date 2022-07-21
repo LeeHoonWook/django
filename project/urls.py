@@ -35,6 +35,7 @@ urlpatterns = [
     path("", index, name="index"),
 
     path("user/", include("app.user.urls")),
+    path("memo/", include("app.memo.urls")),
 
     # rest_framework
     path("apis/", include(router.urls)),
