@@ -22,15 +22,18 @@ class MemoViewSet(viewsets.ModelViewSet):
 
         if serializer.is_valid():
             rtn = serializer.create(request, serializer.data)
+
             return Response(MemoSerializer(rtn).data, status=status.HTTP_201_CREATED)
         else:
-            return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+            return Response('필수 항목 : 제목 + 내용', status=status.HTTP_400_BAD_REQUEST)
 
     def update(self, request, pk=None):
         # PUT METHOD
         serializer = MemoSerializer(data=request.data)
+
         if serializer.is_valid():
             rtn = serializer.update(request, serializer.data, pk)
+
             return Response(MemoSerializer(rtn).data, status=status.HTTP_201_CREATED)
         else:
             return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
@@ -39,8 +42,11 @@ class MemoViewSet(viewsets.ModelViewSet):
     def destroy(self, request, pk=None):
         # DELETE METHOD
         queryset = self.get_queryset().filter(pk=pk)
+
         if not queryset.exists():
+
             raise Http404
+
         queryset.delete()
 
         return MsgOk()
@@ -50,11 +56,13 @@ class MemoViewSet(viewsets.ModelViewSet):
         queryset = self.get_queryset().filter(pk=pk)
 
         if not queryset.exists():
+
             raise Http404
+
         rtn = queryset.first().clicked()
         serializer = MemoSerializer(rtn)
 
-        return Response(MemoSerializer(rtn).data, status=status.HTTP_201_CREATED)
+        return Response(serializer.data, status=status.HTTP_201_CREATED)
 
 
 class LabelViewSet(viewsets.ModelViewSet):
@@ -68,6 +76,7 @@ class LabelViewSet(viewsets.ModelViewSet):
 
         if serializer.is_valid():
             rtn = serializer.create(serializer.data)
+
             return Response(LabelSerializer(rtn).data, status=status.HTTP_201_CREATED)
         else:
             return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
@@ -77,6 +86,7 @@ class LabelViewSet(viewsets.ModelViewSet):
         serializer = LabelSerializer(data=request.data)
         if serializer.is_valid():
             rtn = serializer.update(request, serializer.data, pk)
+
             return Response(LabelSerializer(rtn).data, status=status.HTTP_201_CREATED)
         else:
             return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
@@ -85,8 +95,11 @@ class LabelViewSet(viewsets.ModelViewSet):
     def destroy(self, request, pk=None):
         # DELETE METHOD
         queryset = self.get_queryset().filter(pk=pk)
+
         if not queryset.exists():
+
             raise Http404
+
         queryset.delete()
 
         return MsgOk()

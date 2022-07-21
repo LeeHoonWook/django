@@ -148,3 +148,30 @@ class FindForm(forms.Form):
                 msg = '성공'
 
         return msg, random_number
+
+
+class MemoForm(forms.Form):
+    title = forms.CharField(
+        max_length=100, required=True,
+        widget=forms.TextInput(attrs={
+            "id": "title", "class": "form-control",
+            "placeholder": "제목을 입력하여 주세요",
+            "autofocus": "autofocus", "minlength": 5,
+            'style': 'height:60px;font-size:18px'}))
+
+    content = forms.CharField(
+        required=True,
+        widget=forms.Textarea(attrs={
+            "class": "form-control", "aria-label": "With textarea",
+            "placeholder": "내용을 작성하여 주세요", "cols": "5", "rows": "15"}))
+
+    img = forms.FileField(
+        required=True,
+        widget=forms.FileInput(attrs={
+            "id": "checker", "class": "form-control"}))
+
+    labels = forms.ChoiceField(
+        widget=forms.Select(attrs={
+            "id": "checker"
+        })
+    )

@@ -1,0 +1,118 @@
+{% extends "layout.html" %}
+
+{% load static %}
+
+{% block content %}
+<!-- Content -->
+<div class="container-xxl flex-grow-1 container-p-y">
+    <h4 class="fw-bold py-3 mb-4">자신의 내용을 기록하여 주세요 📜</h4>
+
+    <div class="row">
+        <!-- Basic -->
+        <form class="col-md-12" name="testForm">
+            {% csrf_token %}
+            <div class="card mb-4">
+                <h5 class="card-header">📢 제목과 내용은 반드시 입력하여 주세요!</h5>
+                <div class="card-body demo-vertical-spacing demo-only-element">
+                    <div class="input-group">
+                        <span class="input-group-text" id="basic-addon11">📌</span>
+                        <input type="text" class="form-control" value="{{user}}" readonly="readonly"/>
+                    </div>
+                    <div class="mb-3">
+                        <label for="formFile" class="form-label">메인 이미지</label>
+                        <input class="form-control" type="file" id="formFile" />
+                    </div>
+                    <div class="divider">
+                        <div class="divider-text">
+                            <i class="fa-solid fa-feather-pointed"></i>
+                        </div>
+                    </div>
+                    <div class="input-group">
+                        <span class="input-group-text" id="basic-addon11">제목</span>
+                        {{form.title}}
+                    </div>
+                    <div class="divider">
+                        <div class="divider-text">
+                            Text
+                        </div>
+                    </div>
+                    <div class="input-group">
+                        <span class="input-group-text">메인 내용</span>
+                        {{form.content}}
+                    </div>
+                    <br/>
+                    <div class="divider">
+                        <div class="divider-text">
+                            키워드를 선택하여 주세요(다중 선택 ctrl+click)
+                        </div>
+                    </div>
+                    <div class="mb-3">
+                        <select class="form-select" id="exampleFormControlSelect2" name="labels" aria-label="Multiple select example" multiple>
+                            {% for l in labels %}
+                                <option style="text-align:center;margin-top:7px;cursor:pointer" value="{{l.id}}">
+                                    {{l.label}}
+                                </option>
+                            {% endfor %}
+                        </select>
+                    </div>
+                    <br/><br/><br/><br/><br/><br/>
+                </div>
+            </div>
+        </form>
+    </div>
+</div>
+  <!-- / Content -->
+{% endblock %}
+
+{% block link %}
+<div class="buy-now">
+    <a style="color:white" class="btn btn-danger btn-buy-now btnAjax">메모 작성</a>
+</div>
+
+{% endblock %}
+
+{% block script %}
+<script src="https://cdn.jsdelivr.net/npm/sweetalert2@10"></script>
+<script type="text/javascript">
+
+    function getCookie(name) {
+        var cookieValue = null;
+        if (document.cookie && document.cookie !== '') {
+            var cookies = document.cookie.split(';');
+            for (var i = 0; i < cookies.length; i++) {
+                var cookie = cookies[i].trim();
+                // Does this cookie string begin with the name we want?
+                if (cookie.substring(0, name.length + 1) === (name + '=')) {
+                    cookieValue = decodeURIComponent(cookie.substring(name.length + 1));
+                    break;
+                }
+            }
+        }
+        return cookieValue;
+    }
+    
+    var csrftoken = getCookie('csrftoken');
+
+    let btnAjax = document.querySelector('.btnAjax');
+    
+    btnAjax.addEventListener('click', e => {
+        var queryString = $("form[name=testForm]").serialize() ;
+        $.ajax({
+            url : '/apis/memos/',
+            headers: {'X-CSRFToken': csrftoken},
+            type : 'POST',
+            enctype:'multipart/form-data',
+            data : queryString,
+            success:function(data){
+                Swal.fire('Good','작성이 완료되었습니다.','success')
+                setTimeout('location.href="{% url 'm-list' %}"',1000)
+            },
+            error: function(e){
+                Swal.fire('유효하지 않은 정보입니다.',e.responseJSON,'error')
+            }
+        })
+    });
+    
+    
+</script>
+{% endblock %}

@@ -1,0 +1,71 @@
+{% extends "layout.html" %}
+
+{% load static %}
+
+{% block content %}
+<!-- Content -->
+
+<div class="container-xxl flex-grow-1 container-p-y">
+    <h4 class="fw-bold py-3 mb-4">우리의 메모 모음집</h4>
+    <!-- Images -->
+    <h5 class="pb-1 mb-4">필요한 내용을 확인하여 주세요</h5>
+    <div class="row mb-5">
+        <div class="col-md-6 col-xl-4">
+            <div class="card mb-3">
+                <img class="card-img-top" src="{% static 'assets/interface.png' %}" alt="Card image cap" />
+                <div class="card-body">
+                    <h5 class="card-title">Card title</h5>
+                    <p class="card-text">
+                        This is a wider card with supporting text below as a natural lead-in to additional content. This
+                        content is a little bit longer.
+                    </p>
+                    <p class="card-text">
+                        <small class="text-muted">Last updated 3 mins ago</small>
+                    </p>
+                    <a style="float:right" href="javascript:void(0);" class="card-link">자세히 알아보기</a>
+                </div>
+            </div>
+        </div>
+        <div class="col-md-6 col-xl-4">
+            <div class="card mb-3">
+                <img class="card-img-top" src="{% static 'assets/interface.png' %}" alt="Card image cap" />
+                <div class="card-body">
+                    <h5 class="card-title">Card title</h5>
+                    <p class="card-text">
+                        This is a wider card with supporting text below as a natural lead-in to additional content. This
+                        content is a little bit longer.
+                    </p>
+                    <p class="card-text">
+                        <small class="text-muted">Last updated 3 mins ago</small>
+                    </p>
+                    <a style="float:right" href="javascript:void(0);" class="card-link">자세히 알아보기</a>
+                </div>
+            </div>
+        </div>
+        <div class="col-md-6 col-xl-4">
+            <div class="card mb-3">
+                <img class="card-img-top" src="{% static 'assets/interface.png' %}" alt="Card image cap" />
+                <div class="card-body">
+                    <h5 class="card-title">Card title</h5>
+                    <p class="card-text">
+                        This is a wider card with supporting text below as a natural lead-in to additional content. This
+                        content is a little bit longer.
+                    </p>
+                    <p class="card-text">
+                        <small class="text-muted">Last updated 3 mins ago</small>
+                    </p>
+                    <a style="float:right" href="javascript:void(0);" class="card-link">자세히 알아보기</a>
+                </div>
+            </div>
+        </div>
+    </div>
+    <!--/ Images -->
+</div>
+<!-- / Content -->
+{% endblock %}
+
+{% block link %}
+<div class="buy-now">
+    <a href="{% url 'register'%}"class="btn btn-danger btn-buy-now">회원 가입</a>
+</div>
+{% endblock %}

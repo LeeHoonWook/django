@@ -31,7 +31,7 @@
         <title>StudyLab</title>
 
         <meta name="description" content="" />
-
+        
         <!-- Favicon -->
         <link rel="icon" type="image/x-icon" href="{% static 'assets/icon.png' %}"/>
 
@@ -53,10 +53,6 @@
 
         <!-- Vendors CSS -->
         <link rel="stylesheet" href="{% static 'css/perfect-scrollbar.css' %}" />
-
-        <link rel="stylesheet" href="{% static 'css/apex-charts.css' %}" />
-
-        <!-- Page CSS -->
 
         <!-- Helpers -->
         <script src="{% static 'js/helpers.js' %}"></script>
@@ -115,7 +111,7 @@
                             </div>
                         </footer>
                         <!-- / Footer -->
-
+                        
                         <div class="content-backdrop fade"></div>
                     </div>
                     <!-- Content wrapper -->
@@ -130,6 +126,12 @@
 
         {% block link %}
 
+        {% endblock %}
+
+        <!-- My JS -->
+        
+        {% block script %}
+                    
         {% endblock %}
 
         <!-- Core JS -->
@@ -153,5 +155,12 @@
 
         <!-- Place this tag in your head or just before your close body tag. -->
         <script async defer src="https://buttons.github.io/buttons.js"></script>
+
+        <script>
+            $(function(){
+                document.getElementById('{{nav_check}}').className = "menu-item active"
+            });
+        </script>
+        
     </body>
 </html>
