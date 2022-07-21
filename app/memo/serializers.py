@@ -21,9 +21,15 @@ class MemoSerializer(serializers.ModelSerializer):
         instance.writer_id = request.user.id
         instance.title = data.get("title")
         instance.content = data.get("content")
+
         if request.FILES.get('img') != None:
             instance.img = request.FILES['img']
+
+        if data.get('auth') != None:
+            instance.auth = data.get('auth')
+
         labels = data.get('labels')
+
         if commit:
             try:
                 instance.save()
@@ -45,31 +51,9 @@ class MemoSerializer(serializers.ModelSerializer):
             if request.FILES.get('img') != None:
                 instance.img = request.FILES['img']
 
-            instance.save()
+            if data.get('auth') != None:
+                instance.auth = data.get('auth')
 
-        return instance
-
-
-class LabelSerializer(serializers.ModelSerializer):
-
-    class Meta:
-        model = Labels
-        fields = "__all__"
-
-    def create(self, data, commit=True):
-        instance = Labels()
-        instance.label = data.get("label")
-
-        if commit:
-            instance.save()
-
-        return instance
-
-    def update(self, data, pk, commit=True):
-        instance = Labels.objects.get(pk=pk)
-        instance.label = data.get("label")
-
-        if commit:
             instance.save()
 
         return instance

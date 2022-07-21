@@ -21,6 +21,7 @@ from django.conf.urls import include
 # rest_framework
 from rest_framework import routers
 from app.memo.apis import *
+from app.label.apis import *
 
 # 이미지
 from django.conf.urls.static import static
@@ -34,8 +35,10 @@ urlpatterns = [
     path('admin/', admin.site.urls),
     path("", index, name="index"),
 
+    # include
     path("user/", include("app.user.urls")),
     path("memo/", include("app.memo.urls")),
+    path("label/", include("app.label.urls")),
 
     # rest_framework
     path("apis/", include(router.urls)),
