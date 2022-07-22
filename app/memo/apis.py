@@ -1,6 +1,6 @@
-from app.models import Memos, Labels
+from app.models import Memos
 from rest_framework import viewsets
-from .serializers import MemoSerializer, LabelSerializer
+from .serializers import MemoSerializer
 from rest_framework import permissions
 from rest_framework.response import Response
 from rest_framework import status
@@ -25,7 +25,7 @@ class MemoViewSet(viewsets.ModelViewSet):
 
             return Response(MemoSerializer(rtn).data, status=status.HTTP_201_CREATED)
         else:
-            return Response('필수 항목 : 제목 + 내용', status=status.HTTP_400_BAD_REQUEST)
+            return Response('필수 항목 : 제목 + 내용', status=status.HTTP_422_UNPROCESSABLE_ENTITY)
 
     def update(self, request, pk=None):
         # PUT METHOD
@@ -36,7 +36,7 @@ class MemoViewSet(viewsets.ModelViewSet):
 
             return Response(MemoSerializer(rtn).data, status=status.HTTP_201_CREATED)
         else:
-            return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+            return Response(serializer.errors, status=status.HTTP_422_UNPROCESSABLE_ENTITY)
 
     @renderer_classes([JSONRenderer])
     def destroy(self, request, pk=None):
@@ -63,43 +63,3 @@ class MemoViewSet(viewsets.ModelViewSet):
         serializer = MemoSerializer(rtn)
 
         return Response(serializer.data, status=status.HTTP_201_CREATED)
-
-
-class LabelViewSet(viewsets.ModelViewSet):
-    queryset = Labels.objects.order_by("-created_at")
-    serializer_class = LabelSerializer
-    permission_classes = [permissions.IsAuthenticated]
-
-    def create(self, request):
-        # POST METHOD
-        serializer = LabelSerializer(data=request.data)
-
-        if serializer.is_valid():
-            rtn = serializer.create(serializer.data)
-
-            return Response(LabelSerializer(rtn).data, status=status.HTTP_201_CREATED)
-        else:
-            return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
-
-    def update(self, request, pk=None):
-        # PUT METHOD
-        serializer = LabelSerializer(data=request.data)
-        if serializer.is_valid():
-            rtn = serializer.update(request, serializer.data, pk)
-
-            return Response(LabelSerializer(rtn).data, status=status.HTTP_201_CREATED)
-        else:
-            return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
-
-    @renderer_classes([JSONRenderer])
-    def destroy(self, request, pk=None):
-        # DELETE METHOD
-        queryset = self.get_queryset().filter(pk=pk)
-
-        if not queryset.exists():
-
-            raise Http404
-
-        queryset.delete()
-
-        return MsgOk()

@@ -27,6 +27,7 @@ class Memos(TimeStampedModel):
     writer = models.ForeignKey(Users, on_delete=models.CASCADE)
     img = models.FileField(upload_to="", blank=True)
     like = models.BigIntegerField(default=0)
+    auth = models.CharField(max_length=100, default='open')
     labels = models.ManyToManyField('Labels', related_name='memos', blank=True)
 
     def clicked(self):
