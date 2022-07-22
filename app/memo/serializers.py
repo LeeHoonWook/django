@@ -47,12 +47,20 @@ class MemoSerializer(serializers.ModelSerializer):
         instance.title = data.get('title')
         instance.content = data.get('content')
 
+        labels = data.get('labels')
+        print(request.FILES.get('img'))
+
         if commit:
             if request.FILES.get('img') != None:
                 instance.img = request.FILES['img']
 
             if data.get('auth') != None:
                 instance.auth = data.get('auth')
+
+            if labels != []:
+                instance.labels.clear()
+                for i in labels:
+                    instance.labels.add(Labels.objects.get(pk=i))
 
             instance.save()
 

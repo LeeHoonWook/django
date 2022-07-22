@@ -3,11 +3,178 @@
 {% load static %}
 
 {% block content %}
+<!-- Content -->
+<div class="container-xxl flex-grow-1 container-p-y">
+    <h4 class="fw-bold py-3 mb-4">자신의 내용을 기록하여 주세요 📜</h4>
 
+    <div class="row">
+        <!-- Basic -->
+        <form class="col-md-12" name="testForm" >
+            {% csrf_token %}
+            <div class="card mb-4">
+                <div class="card-body demo-vertical-spacing demo-only-element">
+                    <div class="form-check form-switch mb-2">
+                        {% if memo.auth == 'secret' %}
+                            <input class="form-check-input" type="checkbox" name="auth" value="secret" id="flexSwitchCheckChecked" checked/>
+                            <label class="form-check-label" for="flexSwitchCheckChecked">
+                                공개를 원하시면 체크를 해제하여 주세요
+                            </label>
+                        {% else %}
+                            <input class="form-check-input" type="checkbox" name="auth" value="secret" id="flexSwitchCheckChecked"/>
+                            <label class="form-check-label" for="flexSwitchCheckChecked">
+                                비공개를 원하시면 체크를 선택하여 주세요
+                            </label>
+                        {% endif %}
+                    </div>
+                    <div class="input-group">
+                        <span class="input-group-text" id="basic-addon11">📌</span>
+                        <input type="text" class="form-control" value="{{memo.writer}}" readonly="readonly"/>
+                    </div>
+                    <div class="mb-3">
+                        <label for="formFile" class="form-label">이미지를 변경을 원할 시 첨부하여 주세요</label>
+                        <input name="img" class="form-control" type="file" id="formFile" />
+                    </div>         
+                    <div class="divider">
+                        <div class="divider-text">
+                            <i class="fa-solid fa-feather-pointed"></i>
+                        </div>
+                    </div>
+                    <div class="input-group">
+                        <span class="input-group-text" id="basic-addon11">제목</span>
+                        <input class="form-control" type="text" value="{{memo.title}}" name="title"
+                            style= 'height:60px;font-size:18px'/>
+                        
+                    </div>
+                    <div class="divider">
+                        <div class="divider-text">
+                            Text
+                        </div>
+                    </div>
+                    <div class="input-group">
+                        <span class="input-group-text">메인 내용</span>
+                        <textarea rows="15" name="content"class="form-control" 
+                            aria-label="With textarea">{{memo.content}}</textarea>
+                    </div>
+                    <br/>
+                    <div class="divider">
+                        <div class="divider-text">
+                            키워드 변경을 원하시면 선택하여 주세요(다중 선택 ctrl+click)
+                        </div>
+                    </div>
+                    <div class="mb-3">
+                        {% if labels %}
+                            <select class="form-select" id="exampleFormControlSelect2" name="labels" aria-label="Multiple select example" multiple>
+                                {% for l in labels %}
+                                    <option style="text-align:center;margin-top:7px;cursor:pointer" value="{{l.id}}">
+                                        {{l.label}}
+                                    </option>
+                                {% endfor %}
+                            </select>
+                        {% else %}
+                            <div class="keyword_link">
+                                <a id="keyword" href="{% url 'index' %}">
+                                    현재 라벨이 없습니다. 필요한 라벨 등록하기
+                                </a>         
+                            </div>
+                        {% endif %}
+                        
+                    </div>
+                    <br/><br/><br/><br/><br/><br/><br/><br/><br/>
+                </div>
+            </div>
+        </form>
+    </div>
+</div>
+  <!-- / Content -->
 {% endblock %}
 
 {% block link %}
 <div class="buy-now">
-    <a href="{% url 'register'%}"class="btn btn-danger btn-buy-now">회원 가입</a>
+    <a style="color:white" class="btn btn-danger btn-buy-now btnAjax">메모 수정</a>
 </div>
+<div class="buy-now2">
+    <a style="color:white;" class="btn btn-danger btn-buy-now2 btnAjax2">메모 삭제</a>
+</div>
+
+{% endblock %}
+
+{% block script %}
+<script src="https://cdn.jsdelivr.net/npm/sweetalert2@10"></script>
+<script type="text/javascript">
+
+    function getCookie(name) {
+        var cookieValue = null;
+        if (document.cookie && document.cookie !== '') {
+            var cookies = document.cookie.split(';');
+            for (var i = 0; i < cookies.length; i++) {
+                var cookie = cookies[i].trim();
+                // Does this cookie string begin with the name we want?
+                if (cookie.substring(0, name.length + 1) === (name + '=')) {
+                    cookieValue = decodeURIComponent(cookie.substring(name.length + 1));
+                    break;
+                }
+            }
+        }
+        return cookieValue;
+    }
+    
+    var csrftoken = getCookie('csrftoken');
+
+    let btnAjax = document.querySelector('.btnAjax');
+    
+    btnAjax.addEventListener('click', e => {
+
+        var queryString = $("form[name=testForm]")[0] ;
+        var formData = new FormData(queryString);
+        
+        $.ajax({
+            url : '/apis/memos/{{memo.id}}/',
+            headers: {'X-CSRFToken': csrftoken},
+            type : 'PUT',
+            enctype:'multipart/form-data',
+            data : formData,
+            contentType: false,
+            processData : false,
+            success:function(data){
+                Swal.fire('Good','수정이 완료되었습니다.','success')
+                setTimeout('location.href="{% url 'm-view' memo_id=memo.id %}"',1000)
+            },
+            error: function(e){
+                Swal.fire('유효하지 않은 정보입니다.',e.responseJSON,'error')
+            }
+        })
+    });
+
+    let btnAjax2 = document.querySelector('.btnAjax2');
+    
+    btnAjax2.addEventListener('click', e => {
+        Swal.fire({
+            title: '정말로 삭제하실건가요?',
+            showDenyButton: true,
+            showCancelButton: true,
+            confirmButtonText: '예',
+            denyButtonText: `아니요`,
+        }).then((result) =>{
+            if (result.isConfirmed) {
+                $.ajax({
+                    url : '/apis/memos/{{memo.id}}/',
+                    headers: {'X-CSRFToken': csrftoken},
+                    type : 'DELETE',
+                    success:function(data){
+                        Swal.fire('ㅠㅠ','삭제가 완료되었습니다.','success')
+                        setTimeout('location.href="{% url 'm-list' %}"',1000)
+                    },
+                    error: function(e){
+                        Swal.fire('실패',e,'error')
+                    }
+                })
+            } else if (result.isDenied) {
+                Swal.fire('좋은 선택입니다!', '', 'info')
+            }
+        })
+        
+    });
+    
+    
+</script>
 {% endblock %}

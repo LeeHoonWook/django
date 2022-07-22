@@ -46,24 +46,11 @@
                                     <img src="{% static 'assets/memo-icon.png' %}" alt="chart success" class="rounded" />
                                 </div>
                                 <div class="dropdown">
-                                    <button
-                                        class="btn p-0"
-                                        type="button"
-                                        id="cardOpt3"
-                                        data-bs-toggle="dropdown"
-                                        aria-haspopup="true"
-                                        aria-expanded="false"
-                                    >
-                                        <i class="fa-solid fa-chart-column"></i>
-                                    </button>
-                                    <div class="dropdown-menu dropdown-menu-end" aria-labelledby="cardOpt3">
-                                        <a class="dropdown-item" href="javascript:void(0);">메모 리스트</a>
-                                    </div>
+                                    <h3 class="card-title mb-2">{{count.0}}<span style="font-size:15px">개</span></h3>
                                 </div>
                             </div>
-                            <span class="fw-semibold d-block mb-1">Memos</span>
-                            <h3 class="card-title mb-2">5개</h3>
-                            <small class="text-success fw-semibold">오늘의 메모 : 3개</small>
+                            <span style="font-size:22px" class="fw-semibold d-block mb-1">Memos</span>
+                            <small style="margin-top:10px" class="text-success fw-semibold">오늘의 메모 : {{today.0}}개</small>
                         </div>
                     </div>
                 </div>
@@ -75,24 +62,11 @@
                                     <img src="{% static 'assets/memo-icon.png' %}" alt="chart success" class="rounded" />
                                 </div>
                                 <div class="dropdown">
-                                    <button
-                                        class="btn p-0"
-                                        type="button"
-                                        id="cardOpt6"
-                                        data-bs-toggle="dropdown"
-                                        aria-haspopup="true"
-                                        aria-expanded="false"
-                                    >
-                                        <i class="fa-solid fa-chart-column"></i>
-                                    </button>
-                                    <div class="dropdown-menu dropdown-menu-end" aria-labelledby="cardOpt6">
-                                        <a class="dropdown-item" href="javascript:void(0);">라벨 리스트</a>
-                                    </div>
+                                    <h3 class="card-title mb-2">{{count.1}}<span style="font-size:15px">개</span></h3>
                                 </div>
                             </div>
-                            <span>Labels</span>
-                            <h3 class="card-title text-nowrap mb-1">4개</h3>
-                            <small class="text-success fw-semibold">오늘의 라벨 : 1개</small>
+                            <span style="font-size:22px" class="fw-semibold d-block mb-1">Labels</span>
+                            <small style="margin-top:10px" class="text-success fw-semibold">추가된 라벨 : {{today.1}}개</small>
                         </div>
                     </div>
                 </div>
@@ -106,21 +80,28 @@
                 </div>
                 <div class="card-body">
                     <ul class="p-0 m-0">
-                        <li class="d-flex mb-4 pb-1">
-                            <div class="avatar flex-shrink-0 me-3">
-                                <img src="{% static 'assets/icon.png' %}" alt="User" class="rounded" />
-                            </div>
-                            <div class="d-flex w-100 flex-wrap align-items-center justify-content-between gap-2">
-                                <div class="me-2">
-                                <small class="text-muted d-block mb-1">Paypal</small>
-                                <h6 class="mb-0">Send money</h6>
+                        {% for m in memo %}
+                            <li class="d-flex mb-4 pb-1">
+                                <div class="avatar flex-shrink-0 me-3">
+                                    {% if m.img %}   
+                                        <img class="card-img-top" src="{{m.img.url}}" alt="Card image cap" />
+                                    {% else %}
+                                        <img class="card-img-top" src="{% static 'assets/interface.png' %}" alt="Card image cap" />
+                                    {% endif %}
                                 </div>
-                                <div class="user-progress d-flex align-items-center gap-1">
-                                <h6 class="mb-0">+82.6</h6>
-                                <span class="text-muted">USD</span>
+                                <div class="d-flex w-100 flex-wrap align-items-center justify-content-between gap-2">
+                                    <div class="me-2">  
+                                        <h6 class="mb-0">{{m.title}}</h6>
+                                    </div>
+                                    <div class="user-progress d-flex align-items-center gap-1">
+                                        <h6 class="mb-0">{{m.created_at|date:"Y년 m월 d일"}} / </h6>
+                                        
+                                        <span class="text-muted">❤️</span>
+                                        <h6 class="mb-0">{{m.like}}</h6>
+                                    </div>
                                 </div>
-                            </div>
-                        </li>
+                            </li>
+                        {% endfor %}    
                     </ul>
                 </div>
             </div>
