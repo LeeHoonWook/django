@@ -15942,6 +15942,20 @@ body {
   box-shadow: none;
 }
 
+.buy-now2 .btn-buy-now2 {
+  position: fixed;
+  bottom: 3rem;
+  right: 10rem;
+  z-index: 999999;
+  box-shadow: 0 1px 20px 1px #EB4747;
+  background-color: #EB4747;
+}
+
+.buy-now2 .btn-buy-now2:hover {
+  box-shadow: none;
+}
+
+
 .ui-square,
 .ui-rect,
 .ui-rect-30,

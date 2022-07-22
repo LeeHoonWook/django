@@ -3,11 +3,83 @@
 {% load static %}
 
 {% block content %}
+<!-- Content -->
 
+<div class="container-xxl flex-grow-1 container-p-y">
+    <h4 class="fw-bold py-3 mb-4"><span class="text-muted fw-light">작성자 /</span> {{memo.writer}}</h4>
+    <!-- Horizontal -->
+    <h5 class="pb-1 mb-4"><span class="text-muted fw-light">라벨 /</span>{% for l in memo.labels.all %} {{l.label}} &nbsp{% endfor %} </h5>
+    <div class="row">
+        <div class="col-lg-12 mb-4 order-0">
+            <div class="card mb-3">
+                <div class="row g-0">
+                    <div class="col-md-2">
+                        {% if memo.img %}   
+                            <img class="card-img-top" src="{{memo.img.url}}" alt="Card image cap" style="height:300px;" />
+                        {% else %}
+                            <img class="card-img-top" src="{% static 'assets/interface.png' %}" alt="Card image cap" style="height:300px;"  />
+                        {% endif %}
+                    </div>
+                    <div class="col-md-10">
+                        <div class="card-body">
+                            <h5 style="text-align:center" class="card-title">{{memo.title}}</h5>
+                            <div class="divider">
+                                <div class="divider-text">
+                                    Text
+                                </div>
+                            </div>
+                            <pre style="font-size:22px"class="card-text">{{memo.content}}</pre>
+                            <div class="divider">
+                                <div class="divider-text">
+                                    <i class="fa-solid fa-feather-pointed"></i>
+                                </div>
+                            </div>
+                            <p class="card-text">
+                                <small class="text-muted">{{memo.created_at|date:"Y년 m월 d일"}} / </small>
+                                <small class="text-muted">❤️ : {{memo.like}}</small>
+                            </p>
+                            <div class="btnAjax" style="cursor:pointer;font-size:33px;text-align:right">
+                                click = ❤️
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+      
+    </div>
+    <!--/ Horizontal -->
+</div>
+<!-- / Content -->
 {% endblock %}
 
 {% block link %}
-<div class="buy-now">
-    <a href="{% url 'register'%}"class="btn btn-danger btn-buy-now">회원 가입</a>
-</div>
+{% if user == memo.writer %}
+    <div class="buy-now">
+        <a href="{% url 'm-rewrite' memo_id=memo.id %}"class="btn btn-danger btn-buy-now">메모 수정하기</a>
+    </div>
+{% endif %}
+{% endblock %}
+
+{% block script %}
+<script src="https://cdn.jsdelivr.net/npm/sweetalert2@10"></script>
+
+<script type="text/javascript">
+
+    let btnAjax = document.querySelector('.btnAjax');
+
+    btnAjax.addEventListener('click', e => {
+        $.ajax({
+            url : '/apis/memos/{{memo.id}}/add_click/',
+            type : 'GET',
+            success:function(data){
+                Swal.fire('좋아요!','새로고침 시 적용됩니다.','success')
+                setTimeout('location.href="{% url 'm-view' memo_id=memo.id %}"',1000)
+            },
+            error: function(e){
+                Swal.fire('로그인 후 이용해주세요',e,'error')
+            }
+        })
+    });
+</script>
 {% endblock %}

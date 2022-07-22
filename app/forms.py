@@ -157,13 +157,21 @@ class MemoForm(forms.Form):
             "id": "title", "class": "form-control",
             "placeholder": "제목을 입력하여 주세요",
             "autofocus": "autofocus", "minlength": 5,
-            'style': 'height:60px;font-size:18px'}))
+            'style': 'height:60px;font-size:18px'})
+    )
 
     content = forms.CharField(
         required=True,
         widget=forms.Textarea(attrs={
-            "class": "form-control", "aria-label": "With textarea",
-            "placeholder": "내용을 작성하여 주세요", "cols": "5", "rows": "15"}))
+            "id": "content", "class": "form-control", "aria-label": "With textarea",
+            "placeholder": "내용을 작성하여 주세요", "rows": "15"})
+    )
+
+    img = forms.FileField(
+        widget=forms.FileInput(attrs={
+            "class": "form-control"
+        })
+    )
 
 
 class LabelForm(forms.Form):
